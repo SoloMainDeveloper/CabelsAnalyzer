@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}View all reports{% endblock %}
+{% block content %}
+    {% for item in values %}
+        <p><b>JSON</b>: {{item.json_data}}</p>
+        <p><b>Username</b>: {{item.username}}</p>
+        <p><b>Date</b>: {{item.created_at}}</p>
+    {% endfor %}
+{% endblock %}

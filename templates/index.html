@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Home Page{% endblock %}
 {% block content %}
-<h1>Test</h1>
+<h1>Upload MP4 File</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form action="/scan" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".MOV" required>
+        <label for="frame_interval">Frame interval (seconds):</label>
+        <input type="number" name="frame_interval" value="1" min="1" required>
+        <button type="submit">Загрузить</button>
+    </form>
 {% endblock %}
