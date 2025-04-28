@@ -1,7 +1,10 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta
+
+from sqlalchemy.orm import relationship
+
 from second import second
-from models import db, Users
+from models import db, Users, Reports
 
 app = Flask(__name__)
 app.register_blueprint(second, url_prefix="")
@@ -28,7 +31,7 @@ def login():
         if found_user:
             session["email"] = found_user.email
         else:
-            usr = Users(user, None)
+            usr = Users(name=user, email=None)
             db.session.add(usr)
             db.session.commit()
 
