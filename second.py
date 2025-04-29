@@ -22,10 +22,11 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@second.route("/admin")
+@second.route("/")
+@second.route("/home")
 @login_required
 def home():
-    return "This is an admin route that requires login."
+    return render_template("index.html")
 
 @second.route("/user", methods=["GET", "POST"])
 @login_required
@@ -60,26 +61,29 @@ def reports_view():
 @login_required
 def scan():
     if 'file' not in request.files:
-        return 'No file part', 400
+        flash('No file. You need to load file')
+        return redirect(url_for("second.home"))
     file = request.files['file']
     if file.filename == '':
-        return 'No selected file', 400
+        flash('Empty filename')
+        return redirect(url_for("second.home"))
 
     frame_interval = int(request.form.get('frame_interval', 1))
+    report_name = request.form.get('report_name')
     if file and file.filename.endswith('.MOV'):
         file_content = file.read()
         video_array = np.frombuffer(file_content, np.uint8)
         results = process_video(video_array, frame_interval)
 
-        report = Reports(json_data=results, username=session["user"])
+        report = Reports(json_data=results, username=session["user"], report_name=report_name)
         db.session.add(report)
         db.session.commit()
 
         flash('File uploaded and processed successfully')
-        return redirect(url_for("home"))
+        return redirect(url_for("second.home"))
     else:
         flash('Invalid file type')
-        return redirect(url_for("home"))
+        return redirect(url_for("second.home"))
 
 
 def process_video(video_array, frame_interval):

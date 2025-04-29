@@ -10,9 +10,11 @@
         {% endif %}
     {% endwith %}
     <form action="/scan" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".MOV" required>
-        <label for="frame_interval">Frame interval (seconds):</label>
-        <input type="number" name="frame_interval" value="1" min="1" required>
-        <button type="submit">Загрузить</button>
+        <p><input type="file" name="file" accept=".MOV" required></p>
+        <p><label for="frame_interval">Интервал между кадрами (секунды):</label>
+        <input type="number" name="frame_interval" value="1" min="1" required></p>
+        <p><label for="report_name">Название отчёта:</label>
+        <input type="text" name="report_name" placeholder="Enter report name" required></p>
+        <p><button type="submit">Загрузить</button></p>
     </form>
 {% endblock %}

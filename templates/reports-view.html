@@ -1,9 +1,35 @@
 {% extends "base.html" %}
 {% block title %}View all reports{% endblock %}
 {% block content %}
+<h1>Мои отчёты</h1>
+<table>
+    <thead>
+    <tr class="nowrap">
+        <th>Имя владельца</th>
+        <th>Название отчёта</th>
+        <th>Дата</th>
+        <th>Просмотр</th>
+        <th>Скачать</th>
+    </tr>
+    </thead>
+    <tbody class="nowrap">
     {% for item in values %}
-        <p><b>JSON</b>: {{item.json_data}}</p>
-        <p><b>Username</b>: {{item.username}}</p>
-        <p><b>Date</b>: {{item.created_at}}</p>
+        <tr>
+            <td>{{item.username}}</td>
+            <td>{{item.report_name}}</td>
+            <td>{{item.created_at.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+            <td>
+                <form action="/reports/view/first" method="post">
+                    <button type="submit">Просмотр</button>
+                </form>
+            </td>
+            <td>
+                <form action="#" method="post">
+                    <button type="submit">Просмотр</button>
+                </form>
+            </td>
+        </tr>
     {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
