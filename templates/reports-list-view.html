@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}View all reports{% endblock %}
+{% block content %}
+<h1>Мои отчёты</h1>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<table>
+    <thead>
+    <tr class="nowrap">
+        <th>Имя владельца</th>
+        <th>Название отчёта</th>
+        <th>Дата</th>
+        <th>Просмотр</th>
+        <th>Скачать</th>
+    </tr>
+    </thead>
+    <tbody class="nowrap">
+    {% for report in values %}
+        <tr>
+            <td>{{report.username}}</td>
+            <td>{{report.report_name}}</td>
+            <td>{{report.created_at.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+            <td><a href="{{ url_for('second.view_report', report_name=report.report_name) }}">Просмотр</a></td>
+            <td><a href="{{url_for('second.download_report', report_name=report.report_name)}}">Скачать</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

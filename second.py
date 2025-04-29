@@ -2,14 +2,7 @@ from flask import Blueprint, render_template, session, flash, redirect, url_for,
 from models import db, Users, Reports
 from functools import wraps
 import numpy as np
-import cv2
-import tempfile
-import os
-import io
-from inference_sdk import InferenceHTTPClient
-from PIL import Image
-from config import API_KEY
-
+from videoanalyzer import process_video
 
 second = Blueprint("second", __name__, static_folder="static", template_folder="templates")
 
@@ -55,7 +48,7 @@ def users_view():
 @second.route("reports/view")
 @login_required
 def reports_view():
-    return render_template("reports-view.html", values=Reports.query.filter_by(username=session["user"]))
+    return render_template("reports-list-view.html", values=Reports.query.filter_by(username=session["user"]))
 
 @second.route('/scan', methods=['POST'])
 @login_required
@@ -85,42 +78,17 @@ def scan():
         flash('Invalid file type')
         return redirect(url_for("second.home"))
 
+@second.route('/reports/view/<report_name>')
+@login_required
+def view_report(report_name):
+    report = Reports.query.filter_by(username=session["user"]).filter_by(report_name=report_name).first()
+    if report == None:
+        flash("Отчёт с именем='" + report_name + "' не найден")
+        return redirect(url_for("second.reports_view"))
+    return render_template("report-view.html", report=report)
 
-def process_video(video_array, frame_interval):
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_file:
-        temp_file.write(video_array)
-        temp_video_path = temp_file.name
+@second.route('/reports/download/<report_name>')
+@login_required
+def download_report(report_name):
+    return f'Скачивание отчёта: {report_name}'
 
-    vidcap = cv2.VideoCapture(temp_video_path)
-
-    results = []
-    fps = vidcap.get(cv2.CAP_PROP_FPS)
-    frame_count_interval = int(fps * frame_interval)
-
-    count = 0
-    client = InferenceHTTPClient(
-        api_url="https://detect.roboflow.com",
-        api_key=API_KEY
-    )
-
-    while True:
-        success, image = vidcap.read()
-        if not success:
-            break
-
-        if count % frame_count_interval == 0:
-            image_bytes = cv2.imencode('.jpg', image)[1].tobytes()
-            image = Image.open(io.BytesIO(image_bytes))
-            results.append(client.run_workflow(
-                workspace_name="cabelsanalyzer",
-                workflow_id="detect-count-and-visualize",
-                images={
-                    "image": image
-                },
-                use_cache=True
-            )[0])
-        count += 1
-
-    vidcap.release()
-    os.remove(temp_video_path)
-    return results
