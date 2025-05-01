@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, flash, redirect, url_for, request
+from flask import Blueprint, render_template, session, flash, redirect, url_for, request, make_response
 from models import db, Users, Reports
 from functools import wraps
 import numpy as np
@@ -90,5 +90,14 @@ def view_report(report_name):
 @second.route('/reports/download/<report_name>')
 @login_required
 def download_report(report_name):
-    return f'Скачивание отчёта: {report_name}'
+    report = Reports.query.filter_by(username=session["user"]).filter_by(report_name=report_name).first()
+    if report == None:
+        flash("Отчёт с именем='" + report_name + "' не найден")
+        return redirect(url_for("second.reports_view"))
+    response = make_response(render_template("report-view.html", report=report))
+    response.headers["Content-Type"] = "text/html"
+    response.headers["Content-Disposition"] = f"attachment; filename={report_name}|" + report.created_at.strftime(
+        '%Y-%m-%d %H:%M:%S') + ".html"
+
+    return response
 
