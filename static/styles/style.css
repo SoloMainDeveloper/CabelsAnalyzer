@@ -48,3 +48,13 @@ th {
    white-space: nowrap;
    text-overflow: ellipsis;
 }
+
+.report-statistics {
+    margin: auto 0;
+    margin-left: 25px;
+}
+
+.processed_image {
+    width: 25%;
+    height: auto;
+}
