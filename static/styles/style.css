@@ -1,50 +1,68 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
 }
 
 header {
-    background: #35424a;
-    color: #ffffff;
-    padding: 10px 0;
-    text-align: center;
+  background: #35424a;
+  color: #ffffff;
+  padding: 10px 0;
+  text-align: center;
 }
 
 main {
-    padding: 20px;
+  padding: 20px;
 }
 
 footer {
-    background: #35424a;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px 0;
-    position: absolute;
-    width: 100%;
-    bottom: 0;
+  background: #35424a;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-th, td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
 }
 
 th {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .nowrap {
-   text-align:center;
-   width: 150px;
-   overflow: hidden;
-   white-space: nowrap;
-   text-overflow: ellipsis;
+  text-align: center;
+  width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.messages {
+  max-width: max-content;
+  margin: 0 auto;
+  position: fixed;
+  top: -100px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.messages-appear {
+  top: 1rem;
+  opacity: 1;
 }

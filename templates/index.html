@@ -1,20 +1,60 @@
 {% extends "base.html" %}
 {% block title %}Home Page{% endblock %}
 {% block content %}
-<h1>Upload MP4 File</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for msg in messages %}
-                <p>{{msg}}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <form action="/scan" method="post" enctype="multipart/form-data">
-        <p><input type="file" name="file" accept=".MOV" required></p>
-        <p><label for="frame_interval">Интервал между кадрами (секунды):</label>
-        <input type="number" name="frame_interval" value="1" min="1" required></p>
-        <p><label for="report_name">Название отчёта:</label>
-        <input type="text" name="report_name" placeholder="Enter report name" required></p>
-        <p><button type="submit">Загрузить</button></p>
+
+<div class="container mt-5 flex flex-col">
+    <h1 class="mb-4 text-center">Upload MP4 File</h1>
+    <form action="/scan" method="post" enctype="multipart/form-data"
+        style="max-width: max-content; justify-self: center;">
+        <div class="mb-3">
+            <label for="file" class="form-label">Выберите файл (.MOV)</label>
+            <input type="file" name="file" id="fileInput" accept=".MOV" class="d-none" required>
+
+            <button type="button" class="btn btn-outline-primary"
+                onclick="document.getElementById('fileInput').click();">
+                Загрузить видео
+            </button>
+
+            <div id="fileName" class="form-text mt-2 text-secondary text-center"></div>
+        </div>
+        <div class="mb-3">
+            <label for="frame_interval" class="form-label">Интервал между кадрами (секунды)</label>
+            <input type="number" name="frame_interval" class="form-control" value="1" min="1" required>
+        </div>
+        <div class="mb-3">
+            <label for="report_name" class="form-label">Название отчёта</label>
+            <input type="text" name="report_name" class="form-control" placeholder="Enter report name" required>
+        </div>
+        <div class="text-center" id="submitSection">
+            <button type="submit" class="btn btn-primary">Загрузить</button>
+        </div>
     </form>
+</div>
+
+<script>
+    const input = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    input.addEventListener('change', () => {
+        fileName.textContent = input.files.length > 0
+            ? `Выбран файл: ${input.files[0].name}`
+            : '';
+    });
+
+    const form = document.querySelector("form");
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const fileTriggerBtn = form.querySelector('button[onclick]');
+    const frameIntervalInput = form.querySelector('input[name="frame_interval"]');
+    const reportNameInput = form.querySelector('input[name="report_name"]');
+
+    form.addEventListener("submit", () => {
+        submitBtn.disabled = true;
+        fileTriggerBtn.disabled = true;
+        frameIntervalInput.disabled = true;
+        reportNameInput.readOnly = true;
+        submitBtn.innerHTML = `
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Обработка...
+    `;
+    });
+</script>
 {% endblock %}
