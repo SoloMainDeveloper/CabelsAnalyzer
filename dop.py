@@ -18,7 +18,7 @@ db.init_app(app)
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form["nm"]
+        user = request.form["login"]
         password = request.form["password"]
 
         found_user = Users.query.filter_by(name=user).first()

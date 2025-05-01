@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<h1>Login</h1>
-<div>
-    <form action="#" method="post">
-        <p>Имя: <input type="text" name="nm" required /></p>
-        <p>Пароль: <input type="password" name="password" required /></p>
-        <p><input type="submit" name="submit" value="Войти" /></p>
+<div class="container mt-5 flex flex-col">
+    <h1 class="mb-4 text-center">Авторизация</h1>
+    <form action="#" method="post" enctype="multipart/form-data"
+        style="max-width: max-content; justify-self: center;">
+        <div class="mb-3">
+            <input type="text" name="login" class="form-control" placeholder="Логин"  required>
+        </div>
+        <div class="mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Пароль" required>
+        </div>
+        <div class="text-center" id="submitSection">
+            <button type="submit" class="btn btn-primary" style="width: 120px">Войти</button>
+        </div>
     </form>
 </div>
 {% endblock %}
+<!--<label for="frame_interval" class="form-label">Интервал между кадрами (секунды)</label>-->
+<!--            <label for="report_name" class="form-label">Название отчёта</label>-->

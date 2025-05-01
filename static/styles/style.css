@@ -54,15 +54,13 @@ th {
   max-width: max-content;
   margin: 0 auto;
   position: fixed;
-  top: -100px;
-  left: 0;
-  right: 0;
+  right: -100px;
   z-index: 2;
-  transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  transition: right 0.5s ease-in-out, opacity 0.5s ease-in-out;
   opacity: 0;
 }
 
 .messages-appear {
-  top: 1rem;
+  right: 10px;
   opacity: 1;
 }
