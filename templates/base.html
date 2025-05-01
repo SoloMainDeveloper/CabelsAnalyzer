@@ -54,6 +54,18 @@
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
   <script> window.addEventListener("DOMContentLoaded", () => {
+       const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+    navLinks.forEach(link => {
+      const linkPath = link.getAttribute("href");
+      if (currentPath === linkPath || currentPath.startsWith(linkPath + "/")) {
+        link.parentElement.classList.add("active");
+      } else {
+        link.parentElement.classList.remove("active");
+      }
+    });
+
       const el = document.querySelector(".messages");
       if (el) {
         el.classList.add("messages-appear");

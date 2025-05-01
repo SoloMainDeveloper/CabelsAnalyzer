@@ -64,3 +64,13 @@ th {
   right: 10px;
   opacity: 1;
 }
+
+.report-statistics {
+    margin: auto 0;
+    margin-left: 25px;
+}
+
+.processed_image {
+    width: 25%;
+    height: auto;
+}
