@@ -3,12 +3,12 @@
 {% block content %}
 
 <div class="container mt-5 flex flex-col">
-    <h1 class="mb-4 text-center">Upload MP4 File</h1>
+    <h1 class="mb-4 text-center">Upload Video</h1>
     <form action="/scan" method="post" enctype="multipart/form-data"
         style="max-width: max-content; justify-self: center;">
         <div class="mb-3">
-            <label for="file" class="form-label">Выберите файл (.MOV)</label>
-            <input type="file" name="file" id="fileInput" accept=".MOV" class="d-none" required>
+            <label for="file" class="form-label">Выберите файл</label>
+            <input type="file" name="file" id="fileInput" accept=".MOV, .mp4, .avi, .mkv, .wmv, .flv" class="d-none" required>
 
             <button type="button" class="btn btn-outline-primary"
                 onclick="document.getElementById('fileInput').click();">
@@ -18,8 +18,8 @@
             <div id="fileName" class="form-text mt-2 text-secondary text-center"></div>
         </div>
         <div class="mb-3">
-            <label for="frame_interval" class="form-label">Интервал между кадрами (секунды)</label>
-            <input type="number" name="frame_interval" class="form-control" value="1" min="1" required>
+            <label for="report_interval" class="form-label">Интервал между кадрами (секунды)</label>
+            <input type="number" value="1" min="1" name="report_interval" class="form-control" required>
         </div>
         <div class="mb-3">
             <label for="report_name" class="form-label">Название отчёта</label>

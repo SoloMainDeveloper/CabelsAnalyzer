@@ -6,18 +6,21 @@
 
 <div style="margin-bottom: 20px;">
     <button onclick="filterBad()">Дефекты</button>
+    <button onclick="filterNothingFound()">Не обнаружено</button>
     <button onclick="filterAll()">Все кадры</button>
 </div>
-
 {% for item in report.json_data %}
-<div class="report-view" style="display: flex; margin-bottom: 10px" data-class="{{ item.predictions.predictions[0].class }}">
-    <img class="processed_image" src="data:image/jpeg;base64, {{ item.output_image }}" alt="обработанное изображение">
-    <div class="report-statistics">
-        <p class="defect_class"><strong>Состояние провода:</strong> {{ item.predictions.predictions[0].class }}</p>
-        <p class="time"><strong>Время кадра:</strong> {{ item.frame_time }}</p>
-        <p class="confidence"><strong>Степень предсказания дефекта:</strong> {{ item.predictions.predictions[0].confidence | round(3) }}</p>
-    </div>
-</div>
+        <div class="report-view" style="display: flex; margin-bottom: 10px"
+             data-class="{% if item.count_objects != 0 and item.predictions.predictions | length > 0 %}{{ item.predictions.predictions[0].class }}{% else %}default{% endif %}">
+            <img class="processed_image" src="data:image/jpeg;base64, {{ item.output_image }}" alt="обработанное изображение">
+            <div class="report-statistics">
+                <p class="time"><strong>Время кадра:</strong> {{ item.frame_time }}</p>
+                {% for i in range(item.count_objects) %}
+                    <p class="defect_class"><strong>Состояние провода:</strong> {{ item.predictions.predictions[i].class }}</p>
+                    <p class="confidence"><strong>Степень предсказания дефекта:</strong> {{ item.predictions.predictions[i].confidence | round(3) }}</p>
+                {% endfor %}
+            </div>
+        </div>
 {% endfor %}
 <button onclick="window.scrollTo(0, 0)" style="width: 100%;">Наверх</button>
 
@@ -25,8 +28,20 @@
     function filterBad() {
         const reports = document.querySelectorAll('.report-view');
         reports.forEach(report => {
-            const defectClass = report.dataset.class;
-            if (defectClass === 'bad cabel') {
+            const defectClass = report.getAttribute("defect");
+            if (defectClass === 'default') {
+                report.style.display = 'flex';
+            } else {
+                report.style.display = 'none';
+            }
+        });
+    }
+
+    function filterNothingFound() {
+        const reports = document.querySelectorAll('.report-view');
+        reports.forEach(report => {
+            const defectClass = report.getAttribute("data-class");
+            if (defectClass === 'default') {
                 report.style.display = 'flex';
             } else {
                 report.style.display = 'none';
