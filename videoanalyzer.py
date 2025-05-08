@@ -34,7 +34,7 @@ def process_video(video_array, frame_interval):
 
     count = 0
     client = InferenceHTTPClient(
-        api_url="https://detect.roboflow.com",
+        api_url="http://localhost:9001/",
         api_key=API_KEY
     )
 
