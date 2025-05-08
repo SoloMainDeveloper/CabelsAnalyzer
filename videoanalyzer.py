@@ -41,8 +41,8 @@ def process_video(video_array, frame_interval):
     )
     logging.info(f"Начало видео. {frame_count_interval}.")
 
-    with ThreadPoolExecutor() as executor:
-        futures = []
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {}
 
         while True:
             success, image = vidcap.read()
@@ -50,11 +50,13 @@ def process_video(video_array, frame_interval):
                 break
 
             if count % frame_count_interval == 0:
-                futures.append(executor.submit(process_frame, client, image, count, fps))
+                future = executor.submit(process_frame, client, image, count, fps)
+                futures[future] = count
             count += 1
 
-        for future in as_completed(futures):
-            results.append(future.result())
+            for future in as_completed(futures):
+                results.append(future.result())
+                del futures[future]
 
     vidcap.release()
     os.remove(temp_video_path)
