@@ -6,11 +6,12 @@ from inference_sdk import InferenceHTTPClient
 from PIL import Image
 from config import API_KEY
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import logging
 
 def process_frame(client, image, count, fps):
     image_bytes = cv2.imencode('.jpg', image)[1].tobytes()
     image = Image.open(io.BytesIO(image_bytes))
-
+    logging.info(f"Кадр {count} начало")
     result = client.run_workflow(
         workspace_name="cabelsanalyzer",
         workflow_id="detect-count-and-visualize",
@@ -19,6 +20,7 @@ def process_frame(client, image, count, fps):
     )[0]
 
     result["frame_time"] = seconds_to_hhmmss(round(count / fps))
+    logging.info(f"Кадр {result['frame_time']} - {count} конец")
     return result
 
 
@@ -37,6 +39,7 @@ def process_video(video_array, frame_interval):
         api_url="http://localhost:9001/",
         api_key=API_KEY
     )
+    logging.info(f"Начало видео. {frame_count_interval}.")
 
     with ThreadPoolExecutor() as executor:
         futures = []
@@ -55,6 +58,7 @@ def process_video(video_array, frame_interval):
 
     vidcap.release()
     os.remove(temp_video_path)
+    logging.info("Конец анализа видео")
 
     sorted_results = sorted(results, key=lambda x: time_to_seconds(x["frame_time"]))
     return sorted_results

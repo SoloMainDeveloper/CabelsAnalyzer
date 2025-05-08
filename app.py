@@ -3,6 +3,7 @@ from celery import Celery
 from models import db, Users, Reports
 from second import second
 import bcrypt
+import logging
 
 def make_celery(app):
     celery = Celery(app.import_name, backend=app.config['CELERY_RESULT_BACKEND'],
@@ -18,6 +19,12 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
     app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+    logging.basicConfig(filename='app.log',
+                        filemode='a',  # 'a' для добавления, 'w' для перезаписи
+                        level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
+
     db.init_app(app)
     app.register_blueprint(second, url_prefix="")
     return app
